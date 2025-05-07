@@ -1,6 +1,7 @@
 package Workable;
 
 import Materials.Material;
+<<<<<<< HEAD
 
 public class Miner implements Workable {
 
@@ -9,6 +10,19 @@ public class Miner implements Workable {
     private int inventorySize;      // Max capacity of material before unloading
     private boolean automated;      // Whether automation is purchased
     private int carriedAmount;      // Current material amount carried
+=======
+import Strategy.MiningStrategy;
+
+public class Miner implements Workable {
+
+    private int level = 1;
+    private int shaftDepth;
+    private MiningStrategy miningStrategy;
+    private float speed;
+    private int inventorySize;
+    private boolean automated;
+    private int carriedAmount;
+>>>>>>> e1f8f9f (Initial commit)
 
     public Miner(int level, float speed, int inventorySize) {
         this.level = level;
@@ -18,6 +32,18 @@ public class Miner implements Workable {
         this.carriedAmount = 0;
     }
 
+<<<<<<< HEAD
+=======
+    public Miner(int shaftDepth, MiningStrategy miningStrategy) {
+        this.shaftDepth = shaftDepth;
+        this.miningStrategy = miningStrategy;
+    }
+
+    public double mineOneCrate() {
+        return miningStrategy.crateValue(shaftDepth, level);
+    }
+
+>>>>>>> e1f8f9f (Initial commit)
     @Override
     public void work() {
         if (carriedAmount < inventorySize) {
