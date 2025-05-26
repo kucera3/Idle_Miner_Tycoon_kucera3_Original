@@ -3,25 +3,37 @@ package Workable;
 import Materials.*;
 public class Miner extends Worker implements Workable {
 
-    private int level;
-    private float speed;            // How fast this miner works (e.g., items/sec)
+    private int level = 1;
+    private double miningTime = 3.0;
+    // How fast this miner works (e.g., items/sec)
     private int inventorySize;      // Max capacity of material before unloading
-    private boolean automated;      // Whether automation is purchased
+
     private int carriedAmount;      // Current material amount carried
     private Storage shaftStorage;
+    protected boolean automated = false;
+
+    public Miner() {
+    }
 
     public Miner(Storage shaftStorage) {
         this.shaftStorage = shaftStorage;
         calculateProgressToWork();
     }
 
-    public Miner(int level, float speed, int inventorySize) {
+    public Miner(int level, double miningTime, int inventorySize, int carriedAmount, Storage shaftStorage, boolean automated) {
         this.level = level;
-        this.speed = speed;
+        this.miningTime = miningTime;
         this.inventorySize = inventorySize;
-        this.automated = false;
-        this.carriedAmount = 0;
+        this.carriedAmount = carriedAmount;
+        this.shaftStorage = shaftStorage;
+        this.automated = automated;
     }
+
+    public void upgrade() {
+        level++;
+        miningTime = Math.max(0.5, miningTime - 0.5);
+    }
+
     @Override
     protected void calculateProgressToWork() {
         // Example: Base time is 100 ticks, reduced by 10% per level
@@ -46,15 +58,22 @@ public class Miner extends Worker implements Workable {
     }
 
     @Override
+    protected void performWork() {
+        if (shaftStorage.addCrate()) {
+            System.out.println("Miner mined and stored a crate.");
+        } else {
+            System.out.println("Shaft storage full, miner can't deposit crate.");
+        }
+    }
+
+    @Override
     public void click() {
 
     }
 
     @Override
     public void work() {
-        if (carriedAmount < inventorySize) {
-            carriedAmount += Math.min(inventorySize - carriedAmount, (int) speed);
-        }
+
     }
 
     public void work(Material material) {
@@ -77,9 +96,8 @@ public class Miner extends Worker implements Workable {
         return output;
     }
 
-    public int getLevel() {
-        return level;
-    }
+    public int getLevel() { return level; }
+    public double getMiningTime() { return miningTime; }
 
     public void setLevel(int level) {
         this.level = level;

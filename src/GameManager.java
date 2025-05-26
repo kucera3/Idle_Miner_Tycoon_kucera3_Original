@@ -32,5 +32,10 @@ public class GameManager {
     public long getMoney() {
         return wallet.getBalance();
     }
+    public void gameTick() {
+        miner.doWork();
+        elevator.doWork();
+        collector.doWork();
+    }
 
 }

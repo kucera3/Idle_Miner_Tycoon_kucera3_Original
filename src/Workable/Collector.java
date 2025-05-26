@@ -17,6 +17,10 @@ public class Collector extends Worker implements Workable{
     private  Storage elevatorStorage;
     private  Wallet wallet;
     private final int valuePerCrate = 10;
+
+    public Collector() {
+    }
+
     public Collector(Storage elevatorStorage, Wallet wallet) {
         this.elevatorStorage = elevatorStorage;
         this.wallet = wallet;
@@ -36,7 +40,12 @@ public class Collector extends Worker implements Workable{
     public void automate() {
 
     }
-
+    @Override
+    protected void performWork() {
+        int collected = elevatorStorage.removeCrates(elevatorStorage.getCrates());
+        wallet.add(collected * valuePerCrate);
+        System.out.println("Collector sold " + collected + " crates for $" + (collected * valuePerCrate));
+    }
     @Override
     public boolean isAutomated() {
         return false;
