@@ -36,7 +36,12 @@ public class Collector extends Worker implements Workable{
     public void automate() {
 
     }
-
+    @Override
+    protected void performWork() {
+        int collected = elevatorStorage.removeCrates(elevatorStorage.getCrates());
+        wallet.add(collected * valuePerCrate);
+        System.out.println("Collector sold " + collected + " crates for $" + (collected * valuePerCrate));
+    }
     @Override
     public boolean isAutomated() {
         return false;

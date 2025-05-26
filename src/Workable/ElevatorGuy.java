@@ -60,6 +60,16 @@ public class ElevatorGuy extends Worker implements Workable {
             }
         }
     }
+    @Override
+    protected void performWork() {
+        int toLoad = elevatorStorage.getCapacity() - elevatorStorage.getCrates();
+        int loaded = shaftStorage.removeCrates(toLoad);
+        for (int i = 0; i < loaded; i++) {
+            elevatorStorage.addCrate();
+        }
+        System.out.println("Elevator transported " + loaded + " crates.");
+    }
+
     public Storage getElevatorStorage() {
         return elevatorStorage;
     }

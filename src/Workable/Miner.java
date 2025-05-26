@@ -6,9 +6,11 @@ public class Miner extends Worker implements Workable {
     private int level;
     private float speed;            // How fast this miner works (e.g., items/sec)
     private int inventorySize;      // Max capacity of material before unloading
-    private boolean automated;      // Whether automation is purchased
+
     private int carriedAmount;      // Current material amount carried
     private Storage shaftStorage;
+    protected boolean automated = false;
+
 
     public Miner(Storage shaftStorage) {
         this.shaftStorage = shaftStorage;
@@ -43,6 +45,15 @@ public class Miner extends Worker implements Workable {
     @Override
     public void doWork() {
 
+    }
+
+    @Override
+    protected void performWork() {
+        if (shaftStorage.addCrate()) {
+            System.out.println("Miner mined and stored a crate.");
+        } else {
+            System.out.println("Shaft storage full, miner can't deposit crate.");
+        }
     }
 
     @Override
