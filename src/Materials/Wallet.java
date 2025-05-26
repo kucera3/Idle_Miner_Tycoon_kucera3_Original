@@ -1,4 +1,4 @@
-
+package Materials;
 
 public class Wallet {
     private long balance;

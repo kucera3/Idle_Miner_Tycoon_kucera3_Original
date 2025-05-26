@@ -1,7 +1,6 @@
 package Workable;
 
-import Materials.Material;
-
+import Materials.*;
 public class Miner extends Worker implements Workable {
 
     private int level;
@@ -9,6 +8,12 @@ public class Miner extends Worker implements Workable {
     private int inventorySize;      // Max capacity of material before unloading
     private boolean automated;      // Whether automation is purchased
     private int carriedAmount;      // Current material amount carried
+    private Storage shaftStorage;
+
+    public Miner(Storage shaftStorage) {
+        this.shaftStorage = shaftStorage;
+        calculateProgressToWork();
+    }
 
     public Miner(int level, float speed, int inventorySize) {
         this.level = level;
@@ -21,6 +26,13 @@ public class Miner extends Worker implements Workable {
     protected void calculateProgressToWork() {
         // Example: Base time is 100 ticks, reduced by 10% per level
         progressToWork = (int)(100 / (1 + 0.1 * (level - 1)));
+    }
+    private void mineOneCrate() {
+        if (shaftStorage.addCrate()) {
+            System.out.println("Miner mined and stored a crate.");
+        } else {
+            System.out.println("Shaft storage full, miner can't deposit crate.");
+        }
     }
 
     @Override

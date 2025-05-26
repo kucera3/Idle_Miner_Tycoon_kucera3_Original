@@ -1,5 +1,7 @@
 package Workable;
 
+import Materials.*;
+
 public class ElevatorGuy extends Worker implements Workable {
 
     private int level = 1;
@@ -10,6 +12,22 @@ public class ElevatorGuy extends Worker implements Workable {
     private int currentLoad = 0;
     private int progress = 0;
     private int progressToMove = 100;
+    private Storage shaftStorage;
+    private Storage elevatorStorage;
+
+    public ElevatorGuy(Storage shaftStorage, int elevatorCapacity) {
+        this.shaftStorage = shaftStorage;
+        this.elevatorStorage = new Storage(elevatorCapacity);
+        calculateProgressToWork();
+    }
+    private void transport() {
+        int toLoad = elevatorStorage.getCapacity() - elevatorStorage.getCrates();
+        int loaded = shaftStorage.removeCrates(toLoad);
+        for (int i = 0; i < loaded; i++) {
+            elevatorStorage.addCrate();
+        }
+        System.out.println("Elevator transported " + loaded + " crates.");
+    }
 
     @Override
     public void work() {
@@ -34,45 +52,21 @@ public class ElevatorGuy extends Worker implements Workable {
 
     @Override
     public void doWork() {
-        if (!automated) return;
-
-        progress++;
-        if (progress < progressToMove) return;
-
-        progress = 0;
-
-        switch (state) {
-            case IDLE -> state = State.GOING_DOWN;
-            case GOING_DOWN -> {
-                // Logic to go down one step or arrive
-                // For simplicity, assume instant arrival:
-                state = State.LOADING;
-            }
-            case LOADING -> {
-                if (currentLoad < capacity /* && shaft has ore */) {
-                    currentLoad++; // pick one crate
-                    System.out.println("Elevator loaded one crate.");
-                } else {
-                    state = State.GOING_UP;
-                }
-            }
-            case GOING_UP -> {
-                // Assume instant arrival up:
-                state = State.UNLOADING;
-            }
-            case UNLOADING -> {
-                System.out.println("Elevator unloaded " + currentLoad + " crates.");
-                currentLoad = 0;
-                state = State.IDLE;
+        if (automated) {
+            progress++;
+            if (progress >= progressToWork) {
+                transport();
+                progress = 0;
             }
         }
     }
+    public Storage getElevatorStorage() {
+        return elevatorStorage;
+    }
+
 
     @Override
     public void click() {
-        if (state == State.IDLE) {
-            state = State.GOING_DOWN;
-            System.out.println("Elevator started trip.");
-        }
+        transport();
     }
 }

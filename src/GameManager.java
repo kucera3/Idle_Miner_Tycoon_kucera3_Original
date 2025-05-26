@@ -1,7 +1,15 @@
+import Materials.*;
 import Workable.*;
 
 public class GameManager {
-    private Wallet wallet = new Wallet(100); // Start with $100
+
+
+    Storage shaftStorage = new Storage(50);
+    Wallet wallet = new Wallet(0);
+
+    Miner miner = new Miner(shaftStorage);
+    ElevatorGuy elevator = new ElevatorGuy(shaftStorage, 20);
+    Collector collector = new Collector(elevator.getElevatorStorage(), wallet);
 
     public void sellCrates(int amount) {
         long valuePerCrate = 10; // Example value
@@ -24,4 +32,5 @@ public class GameManager {
     public long getMoney() {
         return wallet.getBalance();
     }
+
 }

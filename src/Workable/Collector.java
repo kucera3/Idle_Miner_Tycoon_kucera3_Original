@@ -1,5 +1,8 @@
 package Workable;
 
+import Materials.*;
+
+
 public class Collector extends Worker implements Workable{
 
     private int level;
@@ -11,6 +14,19 @@ public class Collector extends Worker implements Workable{
     private int progress = 0;
     private int progressToMove = 100;
 
+    private  Storage elevatorStorage;
+    private  Wallet wallet;
+    private final int valuePerCrate = 10;
+    public Collector(Storage elevatorStorage, Wallet wallet) {
+        this.elevatorStorage = elevatorStorage;
+        this.wallet = wallet;
+        calculateProgressToWork();
+    }
+    private void collectAndSell() {
+        int collected = elevatorStorage.removeCrates(elevatorStorage.getCrates());
+        wallet.add(collected * valuePerCrate);
+        System.out.println("Collector sold " + collected + " crates for $" + (collected * valuePerCrate));
+    }
     @Override
     public void work() {
 
@@ -33,45 +49,17 @@ public class Collector extends Worker implements Workable{
 
     @Override
     public void doWork() {
-        if (!automated) return;
-
-        progress++;
-        if (progress < progressToMove) return;
-
-        progress = 0;
-
-        switch (state) {
-            case IDLE -> state = State.GOING_TO_ELEVATOR;
-            case GOING_TO_ELEVATOR -> {
-                // Assume instant arrival:
-                state = State.LOADING;
-            }
-            case LOADING -> {
-                if (currentLoad < capacity /* && elevator has ore */) {
-                    currentLoad++;
-                    System.out.println("Collector loaded one crate.");
-                } else {
-                    state = State.GOING_TO_SELL;
-                }
-            }
-            case GOING_TO_SELL -> {
-                // Instant arrival:
-                state = State.SELLING;
-            }
-            case SELLING -> {
-                System.out.println("Collector sold " + currentLoad + " crates.");
-                currentLoad = 0;
-                state = State.IDLE;
-                // TODO: add money to player wallet
+        if (automated) {
+            progress++;
+            if (progress >= progressToWork) {
+                collectAndSell();
+                progress = 0;
             }
         }
     }
 
     @Override
     public void click() {
-        if (state == State.IDLE) {
-            state = State.GOING_TO_ELEVATOR;
-            System.out.println("Collector started trip.");
-        }
+        collectAndSell();
     }
 }
