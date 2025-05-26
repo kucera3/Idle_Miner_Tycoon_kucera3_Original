@@ -1,6 +1,9 @@
 package Workable;
 public abstract class Worker {
     protected boolean automated = false;
+    protected int level = 1;
+    protected int progress = 0;
+    protected int progressToWork;
 
     public void setAutomated(boolean automated) {
         this.automated = automated;
@@ -10,10 +13,15 @@ public abstract class Worker {
         return automated;
     }
 
-    // Called each game tick, e.g., every 100ms
+    public void setLevel(int level) {
+        this.level = level;
+        calculateProgressToWork();
+    }
+
+    protected abstract void calculateProgressToWork();
+
     public abstract void doWork();
 
-    // Called on player click
     public abstract void click();
 }
 

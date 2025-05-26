@@ -27,6 +27,12 @@ public class ElevatorGuy extends Worker implements Workable {
     }
 
     @Override
+    protected void calculateProgressToWork() {
+        // Example: Base time is 100 ticks, reduced by 5% per level
+        progressToWork = (int)(100 / (1 + 0.05 * (level - 1)));
+    }
+
+    @Override
     public void doWork() {
         if (!automated) return;
 
