@@ -1,20 +1,14 @@
 package Workable;
 
 import Materials.Material;
-import Strategy.MiningStrategy;
 
-public class Miner extends Worker implements Workable {
+public class Miner implements Workable {
 
-    private int level = 1;
-    private int shaftDepth;
-    private MiningStrategy miningStrategy;
-    private int progress = 0;
-    private int progressToMine = 100;
-    private float speed;
-    private int inventorySize;
-    private boolean automated;
-    private int carriedAmount;
-
+    private int level;
+    private float speed;            // How fast this miner works (e.g., items/sec)
+    private int inventorySize;      // Max capacity of material before unloading
+    private boolean automated;      // Whether automation is purchased
+    private int carriedAmount;      // Current material amount carried
 
     public Miner(int level, float speed, int inventorySize) {
         this.level = level;
@@ -23,17 +17,6 @@ public class Miner extends Worker implements Workable {
         this.automated = false;
         this.carriedAmount = 0;
     }
-
-
-    public Miner(int shaftDepth, MiningStrategy miningStrategy) {
-        this.shaftDepth = shaftDepth;
-        this.miningStrategy = miningStrategy;
-    }
-
-    public double mineOneCrate() {
-        return miningStrategy.crateValue(shaftDepth, level);
-    }
-
 
     @Override
     public void work() {
@@ -54,22 +37,6 @@ public class Miner extends Worker implements Workable {
     @Override
     public boolean isAutomated() {
         return automated;
-    }
-
-    @Override
-    public void doWork() {
-        if (automated) {
-            progress++;
-            if (progress >= progressToMine) {
-                mineOneCrate();
-                progress = 0;
-            }
-        }
-    }
-
-    @Override
-    public void click() {
-        mineOneCrate();
     }
 
     public int getOutput() {
