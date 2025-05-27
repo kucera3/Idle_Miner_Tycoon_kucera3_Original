@@ -10,6 +10,7 @@ import Materials.*;
 public class IdleMinerUI {
     private JFrame frame;
     private JLabel statusLabel;
+    private JLabel levelLabel;
     private JLabel moneyLabel;
     private JButton mineButton;
     private int money = 0;
