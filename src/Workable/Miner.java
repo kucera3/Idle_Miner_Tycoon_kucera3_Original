@@ -1,11 +1,18 @@
 package Workable;
 
 import Materials.*;
+
+import java.util.Timer;
+
 public class Miner extends Worker implements Workable {
 
     private int level = 1;
     private double miningTime = 3.0;
     // How fast this miner works (e.g., items/sec)
+    private int cost;
+    private int moneyMined;
+    private Timer autoTimer;
+
     private int inventorySize;      // Max capacity of material before unloading
 
     private int carriedAmount;      // Current material amount carried
@@ -46,6 +53,34 @@ public class Miner extends Worker implements Workable {
             System.out.println("Shaft storage full, miner can't deposit crate.");
         }
     }
+    public Miner(int cost) {
+        this.cost = cost;
+        this.moneyMined = 0;
+    }
+
+    public int getCost() {
+        return cost;
+    }
+
+    public int getMoneyMined() {
+        return moneyMined;
+    }
+
+    public void addMoneyMined(int amount) {
+        moneyMined += amount;
+    }
+
+    public void resetMoneyMined() {
+        moneyMined = 0;
+    }
+    public void setAutoTimer(Timer timer) {
+        this.autoTimer = timer;
+    }
+
+    public Timer getAutoTimer() {
+        return autoTimer;
+    }
+
 
     @Override
     public void setAutomated(boolean automated) {

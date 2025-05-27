@@ -1,32 +1,33 @@
 package Materials;
 
 public class Wallet {
-    private long balance;
+    private int balance;
+
+    public Wallet(int initialAmount) {
+        this.balance = initialAmount;
+    }
 
     public Wallet() {
-        this.balance = 0;
+
     }
 
-    public Wallet(long startingBalance) {
-        this.balance = startingBalance;
-    }
-
-    public long getBalance() {
+    public int getBalance() {
         return balance;
     }
 
-    public void add(long amount) {
-        if (amount < 0) return;
-        balance += amount;
+    public boolean canSpend(long amount) {
+        return balance >= amount;
     }
 
     public boolean spend(long amount) {
-        if (amount > balance || amount < 0) return false;
-        balance -= amount;
-        return true;
+        if (canSpend(amount)) {
+            balance -= amount;
+            return true;
+        }
+        return false;
     }
 
-    public boolean canAfford(long amount) {
-        return balance >= amount;
+    public void add(long amount) {
+        balance += amount;
     }
 }
