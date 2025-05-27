@@ -12,6 +12,8 @@ public class Miner extends Worker implements Workable {
     private Storage shaftStorage;
     protected boolean automated = false;
 
+    public Miner() {
+    }
 
     public Miner(Storage shaftStorage) {
         this.shaftStorage = shaftStorage;
