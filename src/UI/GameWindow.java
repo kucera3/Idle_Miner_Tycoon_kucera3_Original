@@ -2,21 +2,15 @@ package UI;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 
 public class GameWindow extends JFrame {
 
-
-
     public GameWindow() {
-
-        setTitle("Idle Miner Tycoon");
-        setSize(1600, 1200);
+        setTitle("Idle Miner Tycoon Replica");
+        setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
-
 
         add(new GamePanel());
     }

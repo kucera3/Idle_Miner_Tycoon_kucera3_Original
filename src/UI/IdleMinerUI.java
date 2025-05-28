@@ -4,8 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.concurrent.*;
-import Workable.*;
-import Materials.*;
+import Workable.Miner;  // Assuming you have this package
+import Materials.Wallet; // Assuming you have this package
 
 public class IdleMinerUI {
     private JFrame frame;
@@ -13,41 +13,43 @@ public class IdleMinerUI {
     private JLabel levelLabel;
     private JLabel moneyLabel;
     private JButton mineButton;
-    private int money = 0;
+    private JButton upgradeButton;
+
     private ScheduledExecutorService executor;
     private Miner miner = new Miner();
     private Wallet wallet = new Wallet();
+
     public IdleMinerUI() {
         executor = Executors.newScheduledThreadPool(2);
         createUI();
-    }
-    private void upgradeMiner(ActionEvent e) {
-        if (wallet.spend(50)) {
-            miner.upgrade();
-            moneyLabel.setText("Money: $" + wallet.getBalance());
-            levelLabel.setText("Miner Level: " + miner.getLevel());
-            statusLabel.setText("Miner upgraded! Mining time: " + miner.getMiningTime() + "s");
-        } else {
-            statusLabel.setText("Not enough money to upgrade!");
-        }
+        updateLabels();
     }
 
     private void createUI() {
         frame = new JFrame("Idle Miner Tycoon");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 300);
+        frame.setSize(400, 200);
         frame.setLayout(new BorderLayout());
 
         JPanel topPanel = new JPanel();
+        topPanel.setLayout(new GridLayout(3, 1));
+
         statusLabel = new JLabel("Status: Idle");
-        moneyLabel = new JLabel("Money: $0");
+        moneyLabel = new JLabel();
+        levelLabel = new JLabel();
         topPanel.add(statusLabel);
         topPanel.add(moneyLabel);
+        topPanel.add(levelLabel);
 
         JPanel centerPanel = new JPanel();
         mineButton = new JButton("Mine Gold");
         mineButton.addActionListener(this::startMining);
+
+        upgradeButton = new JButton("Upgrade Miner ($50)");
+        upgradeButton.addActionListener(this::upgradeMiner);
+
         centerPanel.add(mineButton);
+        centerPanel.add(upgradeButton);
 
         frame.add(topPanel, BorderLayout.NORTH);
         frame.add(centerPanel, BorderLayout.CENTER);
@@ -55,18 +57,40 @@ public class IdleMinerUI {
         frame.setVisible(true);
     }
 
+    private void updateLabels() {
+        moneyLabel.setText("Money: $" + wallet.getBalance());
+        levelLabel.setText("Miner Level: " + miner.getLevel());
+    }
+
     private void startMining(ActionEvent e) {
         mineButton.setEnabled(false);
+        upgradeButton.setEnabled(false);
         statusLabel.setText("Status: Mining...");
 
+        // Simulate mining based on miner's mining time
+        int miningTimeSeconds = miner.getMiningTime();
+
         executor.schedule(() -> {
-            money += 10;
+            // Add money to wallet based on miner's income per mining cycle
+            wallet.add(miner.getIncome());
+
             SwingUtilities.invokeLater(() -> {
                 statusLabel.setText("Status: Idle");
-                moneyLabel.setText("Money: $" + money);
+                updateLabels();
                 mineButton.setEnabled(true);
+                upgradeButton.setEnabled(true);
             });
-        }, 3, TimeUnit.SECONDS); // Simulate 3 seconds of mining
+        }, miningTimeSeconds, TimeUnit.SECONDS);
+    }
+
+    private void upgradeMiner(ActionEvent e) {
+        if (wallet.spend(50)) {
+            miner.upgrade();
+            statusLabel.setText("Miner upgraded! Mining time: " + miner.getMiningTime() + "s");
+            updateLabels();
+        } else {
+            statusLabel.setText("Not enough money to upgrade!");
+        }
     }
 
     public static void main(String[] args) {

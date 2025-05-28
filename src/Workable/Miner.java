@@ -1,144 +1,121 @@
 package Workable;
 
+import java.awt.*;
 import Materials.*;
 
-import java.util.Timer;
-
-public class Miner extends Worker implements Workable {
-
-    private int level = 1;
-    private double miningTime = 3.0;
-    // How fast this miner works (e.g., items/sec)
-    private int cost;
-    private int moneyMined;
-    private Timer autoTimer;
-
-    private int inventorySize;      // Max capacity of material before unloading
-
-    private int carriedAmount;      // Current material amount carried
-    private Storage shaftStorage;
-    protected boolean automated = false;
+public class Miner extends Worker {
+    private Image minerImage;
+    private int x, y;
+    private int width, height;
+    private int income;
+    private int baseMiningTime;
 
     public Miner() {
+        this.level = 1;
+        this.income = 20;
+        this.baseMiningTime = 3;
     }
 
-    public Miner(Storage shaftStorage) {
-        this.shaftStorage = shaftStorage;
+    public Miner(Image minerImage, int x, int y, int width, int height, int income) {
+        this.minerImage = minerImage;
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.income = income;
+        this.level = 1;
+        this.baseMiningTime = 3;
+    }
+
+
+    public int getLevel() {
+        return level;
+    }
+
+    public int getIncome() {
+        return income;
+    }
+
+    /**
+     * Mining time decreases as level increases, min 1 second.
+     * Example: baseMiningTime = 3 seconds,
+     * level 1 -> 3s, level 2 -> 2s, level 3 -> 1s (minimum).
+     */
+    public int getMiningTime() {
+        int time = baseMiningTime - (level - 1);
+        return Math.max(time, 1);
+    }
+
+    /**
+     * Upgrades miner:
+     * - increase level by 1
+     * - increase income by 10 each upgrade (example)
+     */
+    public void upgrade() {
+        level++;
+        income = (int) Math.ceil(income * 1.2);
         calculateProgressToWork();
     }
 
-    public Miner(int level, double miningTime, int inventorySize, int carriedAmount, Storage shaftStorage, boolean automated) {
-        this.level = level;
-        this.miningTime = miningTime;
-        this.inventorySize = inventorySize;
-        this.carriedAmount = carriedAmount;
-        this.shaftStorage = shaftStorage;
-        this.automated = automated;
+    @Override
+    public boolean isAutomated() {
+        return super.isAutomated();
     }
 
-    public void upgrade() {
-        level++;
-        miningTime = Math.max(0.5, miningTime - 0.5);
+    @Override
+    public void setLevel(int level) {
+        this.level = level;
+        super.setLevel(level);
     }
 
     @Override
     protected void calculateProgressToWork() {
-        // Example: Base time is 100 ticks, reduced by 10% per level
-        progressToWork = (int)(100 / (1 + 0.1 * (level - 1)));
+        // assuming progressToWork is in ticks or seconds, you can do:
+        progressToWork = Math.max(baseMiningTime - (level - 1), 1);
     }
-    private void mineOneCrate() {
-        if (shaftStorage.addCrate()) {
-            System.out.println("Miner mined and stored a crate.");
-        } else {
-            System.out.println("Shaft storage full, miner can't deposit crate.");
-        }
-    }
-    public Miner(int cost) {
-        this.cost = cost;
-        this.moneyMined = 0;
+    @Override
+    public void doWork() {
+        super.doWork();
     }
 
-    public int getCost() {
-        return cost;
+    @Override
+    public void startWork() {
+        super.startWork();
     }
 
-    public int getMoneyMined() {
-        return moneyMined;
-    }
+    @Override
+    protected void performWork() {}
 
-    public void addMoneyMined(int amount) {
-        moneyMined += amount;
+    @Override
+    public void click() {
+        super.click();
     }
-
-    public void resetMoneyMined() {
-        moneyMined = 0;
-    }
-    public void setAutoTimer(Timer timer) {
-        this.autoTimer = timer;
-    }
-
-    public Timer getAutoTimer() {
-        return autoTimer;
-    }
-
 
     @Override
     public void setAutomated(boolean automated) {
         super.setAutomated(automated);
     }
 
-    @Override
-    public void doWork() {
-
+    public void draw(Graphics g, Component observer) {
+        g.drawImage(minerImage, x, y, width, height, observer);
+    }
+    public void increaseIncome(int amount) {
+        income += amount;
     }
 
-    @Override
-    protected void performWork() {
-        if (shaftStorage.addCrate()) {
-            System.out.println("Miner mined and stored a crate.");
-        } else {
-            System.out.println("Shaft storage full, miner can't deposit crate.");
-        }
+    public int getY() {
+        return y;
     }
 
-    @Override
-    public void click() {
-
+    public void setY(int newY) {
+        y = newY;
     }
 
-    @Override
-    public void work() {
-
+    public Image getMinerImage() {
+        return minerImage;
     }
 
-    public void work(Material material) {
-        work();
+    public void setMinerImage(Image minerImage) {
+        this.minerImage = minerImage;
     }
-
-    @Override
-    public void automate() {
-        this.automated = true;
-    }
-
-    @Override
-    public boolean isAutomated() {
-        return automated;
-    }
-
-    public int getOutput() {
-        int output = carriedAmount;
-        carriedAmount = 0;
-        return output;
-    }
-
-    public int getLevel() { return level; }
-    public double getMiningTime() { return miningTime; }
-
-    public void setLevel(int level) {
-        this.level = level;
-        calculateProgressToWork();
-    }
-
-    public int getCarriedAmount() { return carriedAmount; }
 }
-
