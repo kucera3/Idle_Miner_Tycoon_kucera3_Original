@@ -5,8 +5,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
-import Workable.*;
-import Materials.*;
 
 public class GamePanel extends JPanel {
 
@@ -31,8 +29,8 @@ public class GamePanel extends JPanel {
     public GamePanel() {
         setLayout(null); // for absolute positioning
 
-        minerImage = new ImageIcon(getClass().getResource("/miner.jpg")).getImage();
-        elevatorImage = new ImageIcon(getClass().getResource("/elevator.jpg")).getImage();
+        minerImage = new ImageIcon(getClass().getResource("/miner.png")).getImage();
+        elevatorImage = new ImageIcon(getClass().getResource("/elevator.png")).getImage();
         elevatorWidth = elevatorImage.getWidth(null);
         elevatorHeight = elevatorImage.getHeight(null);
         elevatorY = 0;
@@ -54,7 +52,11 @@ public class GamePanel extends JPanel {
         unlockWithMoneyBtn.addActionListener(e -> unlockWithMoney());
         add(unlockWithMoneyBtn);
 
-
+// Upgrade miners button
+        JButton upgradeIncomeBtn = new JButton("Upgrade Income ($100)");
+        upgradeIncomeBtn.setBounds(600, 100, 150, 30);
+        upgradeIncomeBtn.addActionListener(e -> upgradeMineIncome());
+        add(upgradeIncomeBtn);
 
         // Elevator click listener
         addMouseListener(new MouseAdapter() {
