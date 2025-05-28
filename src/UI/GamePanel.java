@@ -1,7 +1,7 @@
 package UI;
 
 
-import Workable.*;
+import Workable.Elevator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +13,6 @@ public class GamePanel extends JPanel {
     private Image minerImage;
     private Image miningMinerImage;
     private Image elevatorImage;
-    private JButton elevatorButton;
 
     private int totalMoney = 0;
 
@@ -21,6 +20,7 @@ public class GamePanel extends JPanel {
     private List<JButton> upgradeButtons = new ArrayList<>();
     private List<JButton> mineButtons = new ArrayList<>();
     private List<JButton> automateButtons = new ArrayList<>();
+    private JButton elevatorButton;
 
     private Elevator elevator;
     private JButton elevatorAutomateButton;
@@ -43,22 +43,12 @@ public class GamePanel extends JPanel {
 
         // Initialize Elevator
         elevator = new Elevator(elevatorX, 0, elevatorImage.getWidth(null), elevatorImage.getHeight(null), elevatorImage);
-        elevator.startMovingOnce(mineLevels);
+
 
         // Add elevator automate button
         elevatorAutomateButton = new JButton("Automate Elevator ($1500)");
         elevatorAutomateButton.setBounds(elevatorX + elevator.getWidth() + 10, 60, 240, 30);
         add(elevatorAutomateButton);
-
-        elevatorButton = new JButton("Elevator");
-        elevatorButton.setBounds(elevatorX + elevator.getWidth() + 10, 20, 100, 30);
-        add(elevatorButton);
-
-        elevatorButton.addActionListener(e -> {
-            if (!elevator.isMoving()) {
-                elevator.startMovingOnce(mineLevels);
-            }
-        });
 
         elevatorAutomateButton.addActionListener(e -> {
             if (!elevator.isAutomated()) {
@@ -92,7 +82,18 @@ public class GamePanel extends JPanel {
             automateButtons.add(automateButton);
             add(automateButton);
 
+            elevatorButton = new JButton("Elevator");
+            elevatorButton.setBounds(elevatorX + elevator.getWidth() + 10, 20, 100, 30);
+            add(elevatorButton);
+
+
             final int index = i;
+
+            elevatorButton.addActionListener(e -> {
+                if (!elevator.isMoving()) {
+                    elevator.startMovingOnce(mineLevels);
+                }
+            });
 
             upgradeButton.addActionListener(e -> {
                 MineLevel lvl = mineLevels.get(index);

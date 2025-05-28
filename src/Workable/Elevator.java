@@ -156,68 +156,8 @@ public class Elevator {
     public int getX() { return x; }
     public int getWidth() { return width; }
     public int getHeight() { return height; }
-
-    public Image getElevatorImage() {
-        return elevatorImage;
-    }
-
-    public void setElevatorImage(Image elevatorImage) {
-        this.elevatorImage = elevatorImage;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
-    }
-
-    public int getCurrentStopIndex() {
-        return currentStopIndex;
-    }
-
-    public void setCurrentStopIndex(int currentStopIndex) {
-        this.currentStopIndex = currentStopIndex;
-    }
-
-    public void setMoving(boolean moving) {
-        this.moving = moving;
-    }
-
-    public void setAutomated(boolean automated) {
-        this.automated = automated;
-    }
-
-    public List<MineLevel> getMineLevels() {
-        return mineLevels;
-    }
-
-    public void setMineLevels(List<MineLevel> mineLevels) {
-        this.mineLevels = mineLevels;
-    }
-
-    public int getElevatorCarriedMoney() {
-        return elevatorCarriedMoney;
-    }
-
-    public void setElevatorCarriedMoney(int elevatorCarriedMoney) {
-        this.elevatorCarriedMoney = elevatorCarriedMoney;
-    }
-
-    public Timer getElevatorTimer() {
-        return elevatorTimer;
-    }
-
-    public void setElevatorTimer(Timer elevatorTimer) {
-        this.elevatorTimer = elevatorTimer;
-    }
-
-    public int getMOVE_SPEED() {
-        return MOVE_SPEED;
-    }
-
 }
+
 
 
 
