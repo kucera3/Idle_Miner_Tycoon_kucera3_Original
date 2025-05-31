@@ -1,100 +1,128 @@
 package UI;
 
-
-import Workable.Elevator;
+import Builder.UIButtonBuilder;
+import Workable.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * GamePanel manages the visual components of the mining game.
+ * It handles rendering, interactions, and dynamic updates of the game state.
+ */
 public class GamePanel extends JPanel {
 
     private Image minerImage;
     private Image miningMinerImage;
     private Image elevatorImage;
+    private Image backgroundImage;
 
     private int totalMoney = 0;
+    int[] unlockCost = {1000};
 
-    private List<MineLevel> mineLevels = new ArrayList<>();
-    private List<JButton> upgradeButtons = new ArrayList<>();
-    private List<JButton> mineButtons = new ArrayList<>();
-    private List<JButton> automateButtons = new ArrayList<>();
-    private JButton elevatorButton;
+    private final List<MineLevel> mineLevels = new ArrayList<>();
+    private final List<JButton> upgradeButtons = new ArrayList<>();
+    private final List<JButton> mineButtons = new ArrayList<>();
+    private final List<JButton> automateButtons = new ArrayList<>();
+    Font smallFont = new Font("Arial", Font.PLAIN, 8);
 
     private Elevator elevator;
-    private JButton elevatorAutomateButton;
+    private JButton elevatorButton;
+    private JButton unlockMineButton;
 
-    private int elevatorX = 300;
+    private final int elevatorX = 360;
+    private final int MINE_SECTION_HEIGHT = 180;
 
+    /**
+     * Constructs the GamePanel, initializes mine levels,
+     * buttons, and the elevator component.
+     */
     public GamePanel() {
         setLayout(null);
 
-        // Load images
-        minerImage = new ImageIcon(getClass().getResource("/miner.jpg")).getImage();
-        miningMinerImage = new ImageIcon(getClass().getResource("/mining_miner.jpg")).getImage();
-        elevatorImage = new ImageIcon(getClass().getResource("/elevator.jpg")).getImage();
+        minerImage = new ImageIcon(getClass().getResource("/miner.png")).getImage();
+        miningMinerImage = new ImageIcon(getClass().getResource("/mining_miner.png")).getImage();
+        elevatorImage = new ImageIcon(getClass().getResource("/elevator.png")).getImage();
+        backgroundImage = new ImageIcon(getClass().getResource("/background.jpg")).getImage();
 
-        // Initialize mine levels
-        mineLevels.add(new MineLevel(100));
-        mineLevels.add(new MineLevel(250));
-        mineLevels.add(new MineLevel(400));
+        int initialY = 100;
+        int spacing = 150;
+
+        for (int i = 0; i < 20; i++) {
+            mineLevels.add(new MineLevel(initialY + i * spacing));
+        }
         mineLevels.get(0).unlocked = true;
 
-        // Initialize Elevator
         elevator = new Elevator(elevatorX, 0, elevatorImage.getWidth(null), elevatorImage.getHeight(null), elevatorImage);
+        elevator.setRepaintObserver(this);
 
+        setupElevatorButton();
+        setupUnlockMineButton();
+        setupMineLevelButtons();
 
-        // Add elevator automate button
-        elevatorAutomateButton = new JButton("Automate Elevator ($1500)");
-        elevatorAutomateButton.setBounds(elevatorX + elevator.getWidth() + 10, 60, 240, 30);
-        add(elevatorAutomateButton);
+        updatePreferredSize();
+    }
 
-        elevatorAutomateButton.addActionListener(e -> {
-            if (!elevator.isAutomated()) {
-                if (totalMoney >= 1500) {
-                    totalMoney -= 1500;
-                    elevator.startAutomation(mineLevels);
-                    elevatorAutomateButton.setText("Stop Elevator Automation");
-                } else {
-                    JOptionPane.showMessageDialog(this, "Not enough money to automate elevator! Cost: $1500");
+    /**
+     * Initializes and adds the elevator activation button.
+     */
+    private void setupElevatorButton() {
+        elevatorButton = new UIButtonBuilder("Elevator")
+                .setBounds(elevatorX + elevator.getWidth() + 10, 20, 140, 30)
+                .build();
+        elevatorButton.addActionListener(e -> {
+            if (!elevator.isMoving()) {
+                elevator.startMovingOnce(mineLevels);
+            } else {
+                System.out.println("Elevator already moving.");
+            }
+        });
+        add(elevatorButton);
+    }
+
+    /**
+     * Initializes and adds the unlock mine button.
+     */
+    private void setupUnlockMineButton() {
+        unlockMineButton = new JButton("Unlock Mine ($" + unlockCost[0] + ")");
+        unlockMineButton.setBounds(elevatorX + elevator.getWidth() + 10, 60, 160, 30);
+        unlockMineButton.addActionListener(e -> {
+            if (totalMoney >= unlockCost[0]) {
+                boolean unlockedOne = false;
+                for (MineLevel mine : mineLevels) {
+                    if (!mine.unlocked) {
+                        mine.unlocked = true;
+                        totalMoney -= unlockCost[0];
+                        unlockCost[0] += 1200;
+                        unlockMineButton.setText("Unlock Mine ($" + unlockCost[0] + ")");
+                        unlockedOne = true;
+                        updatePreferredSize();
+                        repaint();
+                        break;
+                    }
+                }
+                if (!unlockedOne) {
+                    JOptionPane.showMessageDialog(this, "No more mines to unlock!");
                 }
             } else {
-                elevator.stop();
-                elevatorAutomateButton.setText("Automate Elevator ($1500)");
+                JOptionPane.showMessageDialog(this, "Not enough money to unlock mine!");
             }
-            repaint();
         });
+        add(unlockMineButton);
+    }
 
-        // Initialize buttons for mine levels
+    /**
+     * Initializes and adds upgrade, mine, and automate buttons for each mine level.
+     */
+    private void setupMineLevelButtons() {
         for (int i = 0; i < mineLevels.size(); i++) {
             MineLevel level = mineLevels.get(i);
-
-            JButton upgradeButton = new JButton("Upgrade");
-            upgradeButtons.add(upgradeButton);
-            add(upgradeButton);
-
-            JButton mineButton = new JButton("Mine");
-            mineButtons.add(mineButton);
-            add(mineButton);
-
-            JButton automateButton = new JButton("Automate");
-            automateButtons.add(automateButton);
-            add(automateButton);
-
-            elevatorButton = new JButton("Elevator");
-            elevatorButton.setBounds(elevatorX + elevator.getWidth() + 10, 20, 100, 30);
-            add(elevatorButton);
-
-
             final int index = i;
 
-            elevatorButton.addActionListener(e -> {
-                if (!elevator.isMoving()) {
-                    elevator.startMovingOnce(mineLevels);
-                }
-            });
-
+            JButton upgradeButton = new UIButtonBuilder("Upgrade").build();
+            upgradeButton.setFont(smallFont);
             upgradeButton.addActionListener(e -> {
                 MineLevel lvl = mineLevels.get(index);
                 int cost = (int) (30 * Math.pow(1.5, lvl.getLevel()));
@@ -102,17 +130,35 @@ public class GamePanel extends JPanel {
                     totalMoney -= cost;
                     lvl.upgradeLevel();
                     repaint();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Not enough money to upgrade!");
                 }
             });
+            upgradeButtons.add(upgradeButton);
+            add(upgradeButton);
 
+            JButton mineButton = new UIButtonBuilder("Mine").build();
+            mineButton.setFont(smallFont);
             mineButton.addActionListener(e -> {
                 MineLevel lvl = mineLevels.get(index);
                 if (!lvl.unlocked || lvl.isMining()) return;
 
                 lvl.setMining(true);
                 repaint();
+                new Timer(1000, evt -> {
+                    int moneyFromElevator = elevator.collectCarriedMoney();
+                    if (moneyFromElevator > 0) {
+                        totalMoney += moneyFromElevator;
+                        repaint();
+                    }
+                }).start();
 
                 Timer mineTimer = new Timer(lvl.getMiningTime(), ev -> {
+                    int moneyFromElevator = elevator.collectCarriedMoney();
+                    if (moneyFromElevator > 0) {
+                        totalMoney += moneyFromElevator;
+                        repaint();
+                    }
                     lvl.addToBalance(lvl.moneyGenerated);
                     lvl.setMining(false);
                     repaint();
@@ -121,7 +167,11 @@ public class GamePanel extends JPanel {
                 mineTimer.setRepeats(false);
                 mineTimer.start();
             });
+            mineButtons.add(mineButton);
+            add(mineButton);
 
+            JButton automateButton = new UIButtonBuilder("Automate ($500)").build();
+            automateButton.setFont(smallFont);
             automateButton.addActionListener(e -> {
                 MineLevel lvl = mineLevels.get(index);
                 if (!lvl.isAutomated()) {
@@ -132,38 +182,46 @@ public class GamePanel extends JPanel {
                             lvl.addToBalance(lvl.moneyGenerated);
                             repaint();
                         });
+                        automateButton.setText("Stop");
                     } else {
                         JOptionPane.showMessageDialog(this, "Not enough money to automate! Cost: $500");
                     }
                 } else {
                     lvl.stopAutomation();
                     lvl.setMining(false);
+                    automateButton.setText("Automate ($500)");
                 }
                 repaint();
             });
+            automateButtons.add(automateButton);
+            add(automateButton);
         }
     }
 
-    private List<Integer> getUnlockedYPositions() {
-        List<Integer> stops = new ArrayList<>();
-        for (MineLevel level : mineLevels) {
-            if (level.unlocked) {
-                stops.add(level.yPosition);
-            }
-        }
-        stops.add(0); // add ground level
-        return stops;
+    /**
+     * Adjusts the preferred size of the panel based on the number of unlocked mine levels.
+     */
+    public void updatePreferredSize() {
+        int unlockedCount = (int) mineLevels.stream().filter(m -> m.unlocked).count();
+        int height = unlockedCount * MINE_SECTION_HEIGHT + 300;
+        setPreferredSize(new Dimension(400, height));
+        revalidate();
     }
 
+    /**
+     * Paints the component, rendering the background, mine levels,
+     * elevator, and monetary information.
+     * @param g the Graphics context
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        // Background
         g.setColor(new Color(230, 230, 230));
         g.fillRect(0, 0, getWidth(), getHeight());
+        g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
 
-        // Draw miners and mine levels UI
+        int visibleMineIndex = 0;
         for (int i = 0; i < mineLevels.size(); i++) {
             MineLevel level = mineLevels.get(i);
             JButton upgradeButton = upgradeButtons.get(i);
@@ -171,30 +229,33 @@ public class GamePanel extends JPanel {
             JButton automateButton = automateButtons.get(i);
 
             if (level.unlocked) {
-                g.setColor(Color.GRAY);
-                g.fillRect(0, level.yPosition + 60, getWidth(), 10);
+                int yPosition = visibleMineIndex * MINE_SECTION_HEIGHT + 240;
+                level.yPosition = yPosition;
 
                 int minerWidth = 100;
                 int minerHeight = 120;
                 Image img = level.isMining() ? miningMinerImage : minerImage;
-                g.drawImage(img, 100, level.yPosition, minerWidth, minerHeight, this);
+                g.drawImage(img, 100, yPosition, minerWidth, minerHeight, this);
 
-                g.setColor(Color.BLUE);
+                g.setColor(Color.WHITE);
                 String text = "Balance: $" + level.getBalance() + "  Level: " + level.getLevel();
-                g.drawString(text, 100, level.yPosition + minerHeight + 20);
+                g.drawString(text, 100, yPosition + minerHeight + 15);
 
-                int buttonY = level.yPosition + minerHeight + 20;
+                int buttonY = yPosition + minerHeight + 20;
                 int upgradeCost = (int) (30 * Math.pow(1.5, level.getLevel()));
+
                 upgradeButton.setText("Upgrade ($" + upgradeCost + ")");
-                upgradeButton.setBounds(90, buttonY, 140, 30);
+                upgradeButton.setBounds(120, buttonY, 100, 30);
                 upgradeButton.setVisible(true);
 
-                mineButton.setBounds(210, buttonY, 100, 30);
+                mineButton.setBounds(230, buttonY, 100, 30);
                 mineButton.setVisible(true);
 
-                automateButton.setBounds(0, buttonY, 100, 30);
+                automateButton.setBounds(10, buttonY, 100, 30);
                 automateButton.setText(level.isAutomated() ? "Stop" : "Automate ($500)");
                 automateButton.setVisible(true);
+
+                visibleMineIndex++;
             } else {
                 upgradeButton.setVisible(false);
                 mineButton.setVisible(false);
@@ -202,20 +263,13 @@ public class GamePanel extends JPanel {
             }
         }
 
-        // Draw Elevator
         elevator.draw(g, this);
 
-        // Elevator carried money
-        g.setColor(Color.RED);
+        g.setColor(Color.WHITE);
         g.drawString("Elevator $: " + elevator.getCarriedMoney(), elevator.getX(), elevator.getY() + elevator.getHeight() + 20);
 
-        // Total money display
-        g.setColor(Color.BLACK);
-        g.setFont(new Font("Arial", Font.BOLD, 20));
-        g.drawString("Money: $" + totalMoney, 20, 30);
-
-        // Position elevator automate button (fixed)
-        elevatorAutomateButton.setBounds(elevatorX + elevator.getWidth() + 10, 60, 240, 30);
+        g.setColor(Color.WHITE);
+        g.drawString("Total Money: $" + totalMoney, 20, 20);
     }
 }
 

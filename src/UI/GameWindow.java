@@ -1,24 +1,33 @@
 package UI;
 
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 public class GameWindow extends JFrame {
 
     public GameWindow() {
-        setTitle("Idle Miner Tycoon Replica");
-        setSize(800, 600);
+        initializeWindow();
+        addGamePanelWithScroll();
+    }
+
+    private void initializeWindow() {
+        setTitle("Idle Miner Tycoon");
+        setSize(1000, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setResizable(false);
-
-        add(new GamePanel());
+        setResizable(true);
+        setLayout(null);
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            GameWindow window = new GameWindow();
-            window.setVisible(true);
-        });
+    private void addGamePanelWithScroll() {
+        GamePanel gamePanel = new GamePanel();
+        JScrollPane scrollPane = new JScrollPane(gamePanel);
+
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setBounds(0, 0, 980, 580);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(12);
+
+        add(scrollPane);
     }
 }
+

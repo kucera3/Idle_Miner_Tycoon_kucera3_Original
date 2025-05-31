@@ -4,10 +4,10 @@ import javax.swing.*;
 import java.awt.event.ActionListener;
 
 public class UIButtonBuilder {
-    private JButton button;
+    private final JButton button;
 
     public UIButtonBuilder(String text) {
-        button = new JButton(text);
+        this.button = new JButton(text);
     }
 
     public UIButtonBuilder setBounds(int x, int y, int width, int height) {

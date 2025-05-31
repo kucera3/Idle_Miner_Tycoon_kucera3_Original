@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Idle_Miner_Tycoon_kucera3_Original:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Idle_Miner_Tycoon_kucera3_Original_jar</output-path>
+    <root id="archive" name="Idle_Miner_Tycoon_kucera3_Original.jar">
+      <element id="module-output" name="Idle_Miner_Tycoon_kucera3_Original" />
+    </root>
+  </artifact>
+</component>
