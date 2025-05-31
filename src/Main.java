@@ -1,6 +1,4 @@
 import UI.*;
-import Workable.*;
-import Materials.*;
 public class Main {
     public static void main(String[] args) {
         javax.swing.SwingUtilities.invokeLater(() -> {

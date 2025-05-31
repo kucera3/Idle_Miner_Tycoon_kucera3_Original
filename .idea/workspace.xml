@@ -5,9 +5,27 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5fa791eb-417d-4147-b2ee-4442c8b92417" name="Changes" comment="Merge remote-tracking branch 'origin/master'&#10;&#10;# Conflicts:&#10;#&#9;src/UI/GamePanel.java&#10;#&#9;src/UI/GameWindow.java">
-      <change afterPath="$PROJECT_DIR$/src/Builder/UIButtonBuilder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/elevator.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/elevatorX.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/miner.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/minerX.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/mining_miner.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Builder/UIButtonBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Builder/UIButtonBuilder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Materials/Material.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Materials/MaterialType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Materials/Player.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Materials/Storage.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Materials/Wallet.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/UI/GamePanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UI/GamePanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UI/GameWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UI/GameWindow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UI/IdleMinerUI.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UI/MineLevel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Workable/MineLevel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Workable/Collector.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Workable/Elevator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Workable/Elevator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Workable/Miner.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Workable/Workable.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,15 +46,20 @@
         <option name="title" value="All" />
       </GitPushTagMode>
     </option>
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 3
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 3
+}</component>
   <component name="ProjectId" id="2xgLPiYPJjsmkLV6HwI158zBNZh" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -48,7 +71,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "master",
+    "git-widget-placeholder": "officialll",
     "last_opened_file_path": "C:/Users/spong/IdeaProjects/Idle_Miner_Tycoon_kucera3_Original",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
